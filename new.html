@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple DIY Shopping Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .products {
+            width: 60%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .product {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .product img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        .product h3 {
+            margin: 10px 0;
+        }
+        .add-to-cart {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .add-to-cart:hover {
+            background-color: #218838;
+        }
+        .cart-container {
+            width: 35%;
+            min-width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #cart-items {
+            list-style-type: none;
+            padding: 0;
+        }
+        #cart-items li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .cart-total {
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>My DIY Shop</h1>
+    </header>
+
+    <div class="container">
+        <div class="products">
+            <!-- Product 1 -->
+            <div class="product" data-name="Cool T-Shirt" data-price="15.99">
+                <img src="https://via.placeholder.com/150/5D9CEC/FFFFFF?text=T-Shirt" alt="T-Shirt">
+                <h3>Cool T-Shirt</h3>
+                <p>$15.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product" data-name="Fancy Mug" data-price="12.50">
+                <img src="https://via.placeholder.com/150/FFC107/FFFFFF?text=Mug" alt="Mug">
+                <h3>Fancy Mug</h3>
+                <p>$12.50</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product" data-name="Awesome Hat" data-price="20.00">
+                <img src="https://via.placeholder.com/150/DC3545/FFFFFF?text=Hat" alt="Hat">
+                <h3>Awesome Hat</h3>
+                <p>$20.00</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </div>
+
+        <div class="cart-container">
+            <h2>Shopping Cart</h2>
+            <ul id="cart-items">
+                <!-- Cart items will appear here -->
+            </ul>
+            <div class="cart-total">
+                <p>Total: $<span id="cart-total">0.00</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const products = document.querySelectorAll('.product');
+            const cartItems = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+
+            let cart = [];
+
+            products.forEach(product => {
+                const addButton = product.querySelector('.add-to-cart');
+                addButton.addEventListener('click', () => {
+                    const name = product.getAttribute('data-name');
+                    const price = parseFloat(product.getAttribute('data-price'));
+                    addItemToCart(name, price);
+                });
+            });
+
+            function addItemToCart(name, price) {
+                // Check if item is already in cart
+                for (let i = 0; i < cart.length; i++) {
+                    if (cart[i].name === name) {
+                        cart[i].quantity++;
+                        updateCart();
+                        return;
+                    }
+                }
+
+                // If not, add new item
+                cart.push({ name, price, quantity: 1 });
+                updateCart();
+            }
+
+            function updateCart() {
+                cartItems.innerHTML = '';
+                let total = 0;
+                cart.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${item.name} (x${item.quantity})</span>
+                        <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                    `;
+                    cartItems.appendChild(li);
+                    total += item.price * item.quantity;
+                });
+                cartTotal.textContent = total.toFixed(2);
+            }
+        });
+    </script>
+
+</body>
+</html>
